@@ -3,7 +3,7 @@ package lib::absolute;
 
 use strict;
 use warnings;
-use Path::Class;
+use Path::Tiny;
 
 sub import {
 	my ( $self, @args ) = @_;
@@ -12,7 +12,7 @@ sub import {
 		if (ref $_) {
 			$_;
 		} else {
-			my $dir = dir($_)->absolute;
+			my $dir = path($_)->absolute;
 			if ($hard) {
 				die $dir.' of @INC doesn\'t exist' unless -d $dir;
 			}
