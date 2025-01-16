@@ -1,6 +1,11 @@
 Revision history for lib-absolute
 
 {{$NEXT}}
+  - Arguments to "use lib::absolute" other than -hard are directories that
+    get added to @INC the way "use lib" adds them and are then converted
+    with the rest, so "use lib::absolute 'lib'" does in one line what
+    "use lib 'lib'; use lib::absolute;" does. With -hard a missing one
+    aborts the import. (GitHub pull request 2, by Christian Walde)
   - Ship a Changes file, so the release tests have a changelog to check and
     the next release has a section to stamp.
   - Ship a LICENSE file with the Perl 5 licence text, so the distribution
