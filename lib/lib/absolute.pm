@@ -4,10 +4,12 @@ package lib::absolute;
 use strict;
 use warnings;
 use Path::Tiny;
+use lib ();
 
 sub import {
 	my ( $self, @args ) = @_;
 	my $hard = grep { $_ eq '-hard' } @args;
+	lib->import( grep { $_ ne '-hard' } @args );
 	@INC = map {
 		if (ref $_) {
 			$_;
@@ -32,10 +34,16 @@ sub import {
 
   use lib::absolute -hard; # crashs on non existing directories
 
+  use lib::absolute 'lib'; # adds the given path before converting @INC
+
+  use lib::absolute -hard, 'lib'; # both can be combined
+
 =head1 DESCRIPTION
 
 This package converts on load all your @INC path into absolute paths, if you have "." in your path, it gets additionally
 added again (and also get added as absolute path).
+
+Any arguments that are not -hard will be added to the @INC path before converting it to absolute paths.
 
 =head1 SUPPORT
 

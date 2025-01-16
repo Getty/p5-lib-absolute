@@ -12,9 +12,8 @@ my $dir = getcwd;
 my $mydir = path(__FILE__)->parent->absolute;
 
 chdir($mydir);
-unshift @INC, 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
-eval 'use lib::absolute -hard';
+eval 'use lib::absolute -hard, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"';
 
 like($@,qr/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx of \@INC doesn't exist/,'Checking for -hard error');
 
