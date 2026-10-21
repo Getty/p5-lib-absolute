@@ -1,0 +1,3 @@
+claude: true
+prompt: |
+  Drain the lib-absolute karr board. Converts every path in @INC into an absolute path at startup. Delegate behaviour-relevant code to the lib-absolute-worker agent and release audits to lib-absolute-release-manager; follow .claude/rules/lib-absolute-rules.md. Never release.
