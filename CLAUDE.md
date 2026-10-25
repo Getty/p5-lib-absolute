@@ -13,7 +13,8 @@ The import contract, the `.` special case and the `lib/lib` trap live in skill
 ## Delegation
 
 Delegate behavior-relevant code to the right agent instead of touching it yourself —
-the principle and the lane boundaries are in `.claude/rules/lib-absolute-rules.md`.
+the principle is the shared rule `getty-agent-delegation` (skilletor bundle
+`getty-cpan-dist@getty`); lanes and hazards are in `.claude/rules/lib-absolute-rules.md`.
 
 | Task | Agent |
 |---|---|
