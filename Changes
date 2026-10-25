@@ -5,3 +5,5 @@ Revision history for lib-absolute
     the next release has a section to stamp.
   - Ship a LICENSE file with the Perl 5 licence text, so the distribution
     builds again and GitHub detects the licence of the repository.
+  - Declare the prerequisites in a cpanfile instead of dist.ini, so the
+    requirements have exactly one source.
