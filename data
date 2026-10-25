@@ -1,0 +1,30 @@
+---
+claimed_at: 2026-10-25T05:26:40Z
+claimed_by: offen-2610
+class: standard
+completed: 2026-10-25T05:26:40Z
+created: 2026-10-21T02:11:44Z
+id: 4
+priority: medium
+started: 2026-10-25T05:23:26Z
+status: done
+tags:
+- behaviour
+- tests
+title: The -hard error does not name the @INC entry that failed
+updated: 2026-10-25T05:26:40Z
+---
+
+In -hard mode a missing directory aborts the import with
+
+    die $dir . " of @INC doesn't exist" unless -d $dir;
+
+The message names the absolute path that was missing, but not the @INC entry it came from. A caller whose @INC holds five relative entries cannot tell which one is broken from the message alone, and the absolute path is not what the caller wrote in their configuration.
+
+Work:
+- make the message name the offending @INC entry as well as the absolute path it resolved to
+- keep the failure inside import and keep it fatal
+- add a test that pins the new wording and that fails without it. The current suite does not pin the message at all, so nothing catches a change here
+- the change is user visible: it wants a Changes entry in the same commit
+
+2026-10-25 05:25 Done b165cb4: message now '<abs> of @INC doesn't exist (@INC entry '<entry>')', croak inside import, old wording kept as prefix; t/hard.t pins it, red against old lib (verified); POD+Changes updated. Decision: croak per house rule instead of die.
