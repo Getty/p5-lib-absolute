@@ -1,0 +1,27 @@
+---
+claimed_at: 2026-10-25T05:26:35Z
+claimed_by: offen-2610
+class: standard
+completed: 2026-10-25T05:26:35Z
+created: 2026-10-21T02:11:39Z
+id: 3
+priority: medium
+started: 2026-10-25T05:23:06Z
+status: done
+tags:
+- dist
+- release
+title: Create the missing Changes file
+updated: 2026-10-25T05:26:35Z
+---
+
+The distribution has no Changes file at all. The bundle runs the test xt/release/changes_has_content.t, which fails on a missing changelog, so the test suite is red before anything else is checked.
+
+Work:
+- create Changes in CPAN format with the unreleased section at the top (the two-brace NEXT marker, see the house release skill)
+- the unreleased section needs at least one entry line describing what is on main and not released yet; the bundle stamps the section with the next version at release time
+- the file starts with the current work, it is not a historical release list
+
+Done when the changelog test passes.
+
+2026-10-25 05:25 Done 34e8983 (entries added with later commits): Changes with {{$NEXT}}; dzil test --release runs changes_has_content.t ok.
