@@ -3,3 +3,5 @@ Revision history for lib-absolute
 {{$NEXT}}
   - Ship a Changes file, so the release tests have a changelog to check and
     the next release has a section to stamp.
+  - Ship a LICENSE file with the Perl 5 licence text, so the distribution
+    builds again and GitHub detects the licence of the repository.
