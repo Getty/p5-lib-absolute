@@ -1,0 +1,29 @@
+---
+claimed_at: 2026-10-25T05:26:44Z
+claimed_by: offen-2610
+class: standard
+completed: 2026-10-25T05:26:44Z
+created: 2026-10-21T02:11:48Z
+id: 5
+priority: medium
+started: 2026-10-25T05:24:04Z
+status: done
+tags:
+- ci
+title: Replace the Travis file with a GitHub Actions workflow
+updated: 2026-10-25T05:26:44Z
+---
+
+The only CI in this repository is .travis.yml, which no longer runs. There is no .github/workflows directory.
+
+The [@Author::GETTY] bundle ships a shared composite action for exactly this case, so a Getty distribution does not need its own test plumbing:
+
+    - uses: Getty/p5-dist-zilla-pluginbundle-author-getty/.github/actions/dzil-test@v1
+
+Work:
+- add .github/workflows/ci.yml as a pure-Perl distribution workflow: push on all branches, tags ignored, pull_request, a matrix of perl versions in the perl image containers, actions/checkout@v4, git config --global --add safe.directory, then the shared dzil-test action
+- delete .travis.yml, it is dead weight next to the new workflow
+- the action installs the dzil plugins via dzil authordeps and the prerequisites via dzil listdeps --author, so the cpanfile has to be in place first (see the cpanfile card)
+- the workflow file must not be committed into the built distribution; check the built tarball after dzil build
+
+2026-10-25 05:25 Done bf01b56: ci.yml (perl 5.36/5.38/5.40 containers, dzil-test@v1). .travis.yml already gone since 2796741. ci.yml was shipped in the tarball -> added gather_exclude_match = ^\.github/ to dist.ini; tarball verified clean.
