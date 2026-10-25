@@ -1,0 +1,32 @@
+---
+claimed_at: 2026-10-25T05:26:29Z
+claimed_by: offen-2610
+class: standard
+completed: 2026-10-25T05:26:29Z
+created: 2026-10-21T02:11:29Z
+id: 2
+priority: high
+started: 2026-10-25T05:23:10Z
+status: done
+tags:
+- dist
+- release
+title: Add the missing LICENSE — dzil build aborts without it
+updated: 2026-10-25T05:26:29Z
+---
+
+dzil build fails today:
+
+    [@Author::GETTY/LicenseFile] no LICENSE in the distribution: run dzil genlicense and commit the file
+
+The bundle replaces the License plugin with LicenseFile, and that plugin aborts the build when the distribution has no committed LICENSE. Without the fix, no dist can be built at all.
+
+Work:
+- run dzil genlicense
+- git add LICENSE — this step is not optional. The bundle gathers through Git::GatherDir, which sees only tracked files, so an untracked LICENSE fails with the identical message and looks like genlicense did nothing
+- check the generated text against the license, copyright_holder and copyright_year in dist.ini; re-run genlicense whenever one of those three changes
+- the target is the repository, not the tarball: a licence is only detected by GitHub from a committed LICENSE
+
+Done when dzil build gets past the LicenseFile check.
+
+2026-10-25 05:25 Done bdce587: dzil genlicense, LICENSE tracked; text matches Perl_5 / Torsten Raudssus / 2012-2025; dzil build passes LicenseFile.
