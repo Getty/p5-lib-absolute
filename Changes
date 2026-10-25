@@ -7,3 +7,6 @@ Revision history for lib-absolute
     builds again and GitHub detects the licence of the repository.
   - Declare the prerequisites in a cpanfile instead of dist.ini, so the
     requirements have exactly one source.
+  - The error of "use lib::absolute -hard" now names the @INC entry that
+    failed besides the absolute path it resolved to, so a caller can tell
+    which of their entries is broken.

@@ -3,6 +3,7 @@ package lib::absolute;
 
 use strict;
 use warnings;
+use Carp qw( croak );
 use Path::Tiny;
 
 sub import {
@@ -14,7 +15,7 @@ sub import {
 		} else {
 			my $dir = path($_)->absolute;
 			if ($hard) {
-				die $dir.' of @INC doesn\'t exist' unless -d $dir;
+				croak $dir.' of @INC doesn\'t exist (@INC entry \''.$_.'\')' unless -d $dir;
 			}
 			$dir->stringify, $_ eq '.' ? '.' : ();
 		}
@@ -36,6 +37,9 @@ sub import {
 
 This package converts on load all your @INC path into absolute paths, if you have "." in your path, it gets additionally
 added again (and also get added as absolute path).
+
+With C<-hard> a missing directory aborts the import. The error names the
+absolute path that does not exist and the C<@INC> entry it came from.
 
 =head1 SUPPORT
 
