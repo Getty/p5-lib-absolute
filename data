@@ -1,0 +1,37 @@
+---
+claimed_at: 2026-10-25T05:26:24Z
+claimed_by: offen-2610
+class: standard
+completed: 2026-10-25T05:26:24Z
+created: 2026-10-21T02:11:25Z
+id: 1
+priority: high
+started: 2026-10-25T05:21:42Z
+status: done
+tags:
+- dist
+- build
+title: Move the prerequisites from dist.ini into a cpanfile
+updated: 2026-10-25T05:26:24Z
+---
+
+The requirements still live in two prereq blocks in dist.ini:
+
+    [Prereqs]
+    Path::Tiny = 0
+
+    [Prereqs / TestRequires]
+    Test::More = 0.98
+
+The house rule is that requirements live in a cpanfile, not in dist.ini prereq blocks. The [@Author::GETTY] bundle adds the Prereqs::FromCPANfile plugin, so dzil reads the cpanfile and the dist.ini blocks are a second source of truth for the same two requirements.
+
+Work:
+- create cpanfile with the runtime requirement requires Path::Tiny,; (unpinned, no version) and an on test => sub { requires Test::More, 0.98; }; phase block at the end
+- remove both prereq blocks from dist.ini, so each requirement exists in exactly one place
+- verify with dzil listdeps --author that Path::Tiny is still a runtime requirement and Test::More a test requirement
+
+House format for the cpanfile: alphabetical, requires Module::Name, with the version as the minimum (never >=), phase blocks at the end.
+
+2026-10-25 05:25 Also found: (a) tarball ships .claude/, CLAUDE.md, .worktreeinclude and misc/agent-context/ (bundle gathers all tracked files); (b) module has no our $VERSION, dzil inserts it at build (CLAUDE.md/skill expect one); (c) k5 premise: .travis.yml was already removed in 2796741.
+
+2026-10-25 05:25 Done eb8d339: cpanfile added, both Prereqs blocks removed; dzil listdeps --author --json: runtime Path::Tiny, test Test::More 0.98.
