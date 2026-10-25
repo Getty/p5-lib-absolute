@@ -10,3 +10,12 @@ Revision history for lib-absolute
   - The error of "use lib::absolute -hard" now names the @INC entry that
     failed besides the absolute path it resolved to, so a caller can tell
     which of their entries is broken.
+
+0.100     2025-01-15 00:28:13Z
+  - Use Path::Tiny instead of Path::Class.
+
+0.004     2012-07-05 11:51:45Z
+  - Build with the [@Author::GETTY] plugin bundle.
+
+0.003     2012-07-04 21:19:17Z
+  - Add the documentation.
