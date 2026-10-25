@@ -1,0 +1,5 @@
+Revision history for lib-absolute
+
+{{$NEXT}}
+  - Ship a Changes file, so the release tests have a changelog to check and
+    the next release has a section to stamp.
