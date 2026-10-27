@@ -17,8 +17,8 @@ unshift @INC, '.';
 
 eval 'use lib::absolute';
 
-ok(grep { $_ eq $mydir } @INC, 'Checking for absolute t directory in @INC');
-ok(grep { $_ eq '.' } @INC, 'Still having . in @INC');
+ok((grep { $_ eq $mydir } @INC), 'Checking for absolute t directory in @INC');
+ok((grep { $_ eq '.' } @INC), 'Still having . in @INC');
 
 chdir($dir);
 @INC = @INC_BACKUP;
