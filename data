@@ -1,0 +1,19 @@
+---
+class: standard
+completed: 2026-10-27T02:48:38Z
+created: 2026-10-27T02:40:41Z
+id: 7
+priority: high
+started: 2026-10-27T02:48:38Z
+status: done
+tags:
+- bug
+- github
+title: t/basic.t grep precedence, and import arguments converted before they reach
+  @INC (GitHub issue 1, PR 2)
+updated: 2026-10-27T02:48:38Z
+---
+
+Issue https://github.com/Getty/p5-lib-absolute/issues/1 (cxw42): ok(grep {...} @INC, 'name') swallows the test name; the '.' check assumes '.' in @INC. PR https://github.com/Getty/p5-lib-absolute/pull/2 (wchristian): arguments passed on import are added to @INC before conversion. Done: tests use parenthesised grep, the PR's behaviour is evaluated against the local code and taken over if right, suite green.
+
+2026-10-27 02:48 Done on main: 220539b (PR 2 taken over, author Christian Walde; t/args.t red on the old lib) and c89cfe7 (t/basic.t grep parens, GitHub issue 1). Suite green.
