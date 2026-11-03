@@ -10,14 +10,15 @@ absolute path, so that later `chdir` calls cannot change what a relative `@INC`
 entry points to.
 
 The distribution is called `lib-absolute`, the module is `lib::absolute`, and it
-ships **one module and three test files**:
+ships **one module and four test files**:
 
 | File | Role |
 |---|---|
 | `lib/lib/absolute.pm` | the whole implementation — one `import` method, no classes, no functions to call |
 | `t/load.t` | load test — `use_ok('lib::absolute')` |
 | `t/basic.t` | pins the conversion: relative entries become absolute, `.` stays |
-| `t/hard.t` | pins the `-hard` mode: a missing `@INC` directory aborts the import |
+| `t/hard.t` | pins the `-hard` mode: a missing `@INC` directory aborts the import and the error names the path and the `@INC` entry |
+| `t/args.t` | pins the arguments: a directory given to `use` is added to `@INC`, converted, and checked under `-hard` |
 
 There is no CLI, no `bin/`, no other module. If a change touches anything but
 `lib/lib/absolute.pm`, it is probably not this distribution.
@@ -32,8 +33,10 @@ use lib::absolute;         # convert every @INC entry
 use lib::absolute -hard;   # same, but abort when a directory is missing
 ```
 
-`import` receives the import arguments (`-hard` is the only one understood) and
-then rewrites `@INC` in place:
+`import` receives the import arguments: `-hard` switches the mode, every other
+argument is a directory that `lib->import` adds to `@INC` the way `use lib` does
+(`use lib::absolute 'lib'`, `use lib::absolute -hard, 'lib'`). Then it rewrites
+`@INC` in place:
 
 | `@INC` entry | becomes |
 |---|---|
@@ -65,8 +68,9 @@ die $dir.' of @INC doesn\'t exist' unless -d $dir;
 at a non-existent directory must not be silently tolerated — it would surface
 much later as a confusing "Can't locate Foo.pm" instead of the real cause.
 
-The current message names the **absolute path** that was missing but not the
-`@INC` entry it came from, and it does not say which mode failed. Whoever
+The message names the **absolute path** that was missing and the `@INC` entry it
+came from (`<abs> of @INC doesn't exist (@INC entry '<entry>')`); it is raised
+with `croak`. Directories given as arguments are checked the same way. Whoever
 touches the message has to keep it fatal and has to keep it inside `import`.
 
 ## The trap: the module lives in `lib/lib/`
@@ -89,9 +93,11 @@ module sees the pre-conversion state.
 
 - `t/load.t` — the module loads. Nothing more.
 - `t/basic.t` — the contract: a relative entry becomes absolute, `.` survives.
-- `t/hard.t` — the `-hard` contract: a missing directory aborts the import.
+- `t/hard.t` — the `-hard` contract: a missing directory aborts the import, the
+  message names path and entry.
+- `t/args.t` — arguments: added to `@INC`, converted, `-hard` combined with them.
 
-`basic.t` and `hard.t` both `chdir` and both mutate the global `@INC`; they
+`basic.t`, `hard.t` and `args.t` all `chdir` and all mutate the global `@INC`; they
 restore both at the end (`chdir($dir)`, `@INC = @INC_BACKUP`). A new test that
 touches `@INC` or the working directory has to restore them the same way, or it
 breaks the tests that run after it.
@@ -99,10 +105,9 @@ breaks the tests that run after it.
 The `eval 'use lib::absolute'` in both files is deliberate: the import has to be
 observed *inside* an `eval`, because the import dies in `-hard` mode.
 
-Note what the tests do **not** pin: the exact wording of the `-hard` error, and
-the absolute form of `.` (only that `.` is still present). A change to the
-message or to the `.` handling is therefore invisible to the suite — that is a
-gap, not a licence to change it.
+Note what the tests do **not** pin: the absolute form of `.` (only that `.` is
+still present). A change to the `.` handling is therefore invisible to the
+suite — that is a gap, not a licence to change it.
 
 Run with `prove -lr t/` or `dzil test`.
 
@@ -111,12 +116,13 @@ Run with `prove -lr t/` or `dzil test`.
 - `dist.ini` uses `[@Author::GETTY]`, so the POD follows that bundle's shortcut
   commands (`=synopsis`, `=description`, `=seealso`) and every file carries a
   `# ABSTRACT:` line. The module has one.
-- `dist.ini` still carries its prerequisites in a `[Prereqs]` block. The house
-  standard is a `cpanfile` — see `getty-perl-core`.
+- The prerequisites live in `cpanfile` (`Path::Tiny`; `Test::More` on test),
+  `dist.ini` holds the header and the bundle — see `getty-perl-core`.
+- The module carries `our $VERSION`; the bundle rewrites it at release.
 - The CPAN name is `lib-absolute`; the repo is `p5-lib-absolute`.
 - The package name `lib::absolute` is lowercase, unlike almost every other Perl
   distribution. It is the shipped name and cannot be changed without breaking
   every caller that does `use lib::absolute`.
-- The distribution has **no** `Changes` file and **no** `README.md` yet; the
-  `Changes` file starts with the current work, not with a historical release
-  list. See `getty-perl-release-author-getty` for how the version is derived.
+- `Changes`, `LICENSE` and `README.md` are tracked; `Changes` holds the current
+  work under `{{$NEXT}}` above the `0.100` release. See
+  `getty-perl-release-author-getty` for the release flow.

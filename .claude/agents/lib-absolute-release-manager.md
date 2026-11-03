@@ -39,20 +39,17 @@ Run the audit when asked for a release readiness check. It is a report with file
 paths and findings, not a change to the world.
 
 1. **`dist.ini`** — `[@Author::GETTY]` with `author`, `license`, `copyright_holder`
-   and `copyright_year` set. The prerequisites still sit in two `[Prereqs]` blocks in
-   `dist.ini`; the house standard is a `cpanfile` — moving them there is a card, not
-   part of the audit. The module carries no `our $VERSION`, so the bundle falls back
-   to `Git::NextVersion` and derives the number from the tags — the last one is
-   `0.100`.
+   and `copyright_year` set; the prerequisites come from `cpanfile` through
+   `[Prereqs::FromCPANfile]`. The module carries `our $VERSION`, which the bundle
+   rewrites at release through `[RewriteVersion::Transitional]` and
+   `[BumpVersionAfterRelease]`.
 2. **`cpanfile`** — runtime `Path::Tiny`, `Test::More` on test. Report what is
-   missing; do not silently invent a `cpanfile` during an audit.
-3. **`Changes`** — a `{{$NEXT}}` section has to exist. The file does not exist yet;
-   it starts with the current work, not with a historical release list.
-4. **`LICENSE`** — has to be a **committed** file. Today `dzil build` aborts with
-   `[@Author::GETTY/LicenseFile] no LICENSE in the distribution`. The fix is
-   `dzil genlicense` **and** `git add LICENSE` — `Git::GatherDir` sees only tracked
-   files, so an untracked LICENSE fails with the identical message.
-5. **`dzil build`** — has to run clean. It does not today, for the two reasons above.
+   missing; do not silently change the `cpanfile` during an audit.
+3. **`Changes`** — a `{{$NEXT}}` section has to exist; it holds the current work above
+   the `0.100` release.
+4. **`LICENSE`** — has to be a **committed** file — `Git::GatherDir` sees only tracked
+   files.
+5. **`dzil build`** — has to run clean.
 
 **Never** `git push`, never tag, never `dzil release`, never upload to CPAN. A
 release is the maintainer's call, every time. Preparing it is your lane; running it

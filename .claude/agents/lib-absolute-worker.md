@@ -32,17 +32,18 @@ this is a plain module built on `Path::Tiny`. Do not add a second module or a
 
 The behaviour that callers depend on is the import contract and nothing else: a
 relative `@INC` entry becomes absolute, `.` stays **and** its absolute form is
-added as well, a reference entry is passed through untouched, and `-hard` aborts
-the import when a directory is missing. A change to any of those is a user-visible
+added as well, a reference entry is passed through untouched, other arguments are
+added to `@INC` like `use lib` does, and `-hard` aborts the import when a
+directory is missing. A change to any of those is a user-visible
 change: it wants a `Changes` entry under `{{$NEXT}}` naming the effect on a
 caller, and its POD updated in the same edit.
 
 Two traps belong to this repo and are in your briefing: the module lives in
 `lib/lib/` (the `lib` segment appears twice) and the conversion happens at import
 time, so it acts on the `@INC` as it looked at that moment. The `-hard` error
-message does not name the offending `@INC` entry, and the test suite pins neither
-the message nor the absolute form of `.` — do not read the green suite as proof
-that those are right.
+message names the absolute path and the `@INC` entry, and `t/hard.t` and
+`t/args.t` pin it; the absolute form of `.` is not pinned — do not read the green
+suite as proof that it is right.
 
 ## Verification
 

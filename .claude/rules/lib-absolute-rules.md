@@ -22,19 +22,20 @@ Behavior-relevant = anything in `lib/`, the tests, the import contract and the `
 
 ## Deviations from the house rules
 
-- **No `our $VERSION` in the module.** The version is derived at release time from the tags
-  (last `0.100`), not carried in the repo.
+- **`our $VERSION` sits in the module.** `[@Author::GETTY]` rewrites it at release
+  (`[RewriteVersion::Transitional]`, `[BumpVersionAfterRelease]`).
 - **A public-issue topic becomes an internal card.**
 
 ## Hazards — the import contract is the product, don't regress it silently
 
 - **The contract:** everything happens in `import`. A relative `@INC` entry becomes absolute,
   `.` stays **and** its absolute form is added as well, a reference entry passes through
-  untouched, `-hard` aborts when a directory is missing. A change to any of that is
+  untouched, arguments other than `-hard` are added to `@INC` the way `use lib` adds them,
+  `-hard` aborts when a directory is missing. A change to any of that is
   user-visible: it needs a `Changes` entry and a test. Contract table: skill
   `lib-absolute-core`.
-- **The green suite pins neither the `-hard` message nor the absolute form of `.`** — a
-  behavioral change needs a test that pins it.
+- **The suite pins the `-hard` message (absolute path plus `@INC` entry) and the arguments
+  to `use`, but not the absolute form of `.`** — a behavioral change needs a test that pins it.
 - **The module lives in `lib/lib/`** — the `lib` segment appears twice — and the conversion
   runs at import time, so it acts on `@INC` as it looked at that moment.
 - **One module, one `import` method.** A second dependency, a class or a CLI needs a card that

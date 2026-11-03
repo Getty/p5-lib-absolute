@@ -30,9 +30,9 @@ Work is coordinated on the repo's `karr` board (`karr board`).
 
 ## State of the code
 
-The distribution has not been touched since 2025 (last tag `0.100`, which replaced
-Path::Class by Path::Tiny). It predates the current house structures — the
-prerequisites still sit in a `[Prereqs]` block of `dist.ini` instead of a `cpanfile`,
-`LICENSE`, `Changes` and `README.md` do not exist, the CI is a Travis file, and the
-module carries no `our $VERSION`. The `Changes` file starts with the current work,
-not with a historical release list.
+The module carries `our $VERSION`; `[@Author::GETTY]` rewrites it at release through
+`[RewriteVersion::Transitional]` and `[BumpVersionAfterRelease]`. The prerequisites
+live in `cpanfile`, `dist.ini` holds the header and the bundle, `LICENSE`, `Changes`
+and `README.md` are tracked, and CI runs as a GitHub Actions workflow
+(`.github/workflows/ci.yml`). `Changes` collects the current work under `{{$NEXT}}`
+above the `0.100` release.
