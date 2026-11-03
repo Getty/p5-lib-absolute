@@ -1,6 +1,8 @@
 package lib::absolute;
 # ABSTRACT: Convert all paths in @INC to absolute paths
 
+our $VERSION = '0.101';
+
 use strict;
 use warnings;
 use Carp qw( croak );
